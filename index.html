@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Цифровые инструменты для бизнеса</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/aeonik" rel="stylesheet">
+  <style>
+    @property --eb-angle {
+      syntax: '<angle>';
+      initial-value: 0deg;
+      inherits: false;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* ── Color primitives ── */
+      --color-brand-25:  #fafaff;
+      --color-brand-50:  #f9f5ff;
+      --color-brand-100: #f4ebff;
+      --color-brand-200: #e9d7fe;
+      --color-brand-300: #d6bbfb;
+      --color-brand-400: #b692f6;
+      --color-brand-500: #9e77ed;
+      --color-brand-600: #7f56d9;
+      --color-brand-700: #6941c6;
+      --color-brand-800: #53389e;
+      --color-brand-900: #42307d;
+
+      --color-gray-25:  #fcfcfd;
+      --color-gray-50:  #f9fafb;
+      --color-gray-100: #f2f4f7;
+      --color-gray-200: #eaecf0;
+      --color-gray-300: #d0d5dd;
+      --color-gray-400: #98a2b3;
+      --color-gray-500: #667085;
+      --color-gray-600: #475467;
+      --color-gray-700: #344054;
+      --color-gray-800: #1d2939;
+      --color-gray-900: #101828;
+
+      /* ── Shadows ── */
+      --shadow-xs:                    0px 1px 2px rgba(10,13,18,.05);
+      --shadow-sm:                    0px 1px 2px rgba(10,13,18,.06), 0px 1px 3px rgba(10,13,18,.10);
+      --shadow-md:                    0px 2px 4px rgba(10,13,18,.06), 0px 4px 8px rgba(10,13,18,.10);
+      --shadow-inner-border:          inset 0px 0px 0px 1px rgba(10,13,18,.18);
+      --shadow-inner-bottom:          inset 0px -2px 0px 0px rgba(10,13,18,.05);
+      --shadow-btn:                   var(--shadow-xs), var(--shadow-inner-border), var(--shadow-inner-bottom);
+
+      /* ── Spacing ── */
+      --spacing-xs:  4px;
+      --spacing-sm:  6px;
+      --spacing-md:  8px;
+      --spacing-lg:  12px;
+      --spacing-xl:  16px;
+      --spacing-2xl: 20px;
+      --spacing-3xl: 24px;
+      --spacing-4xl: 32px;
+
+      /* ── Border radius ── */
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 10px;
+      --radius-xl: 12px;
+      --radius-2xl: 16px;
+      --radius-full: 9999px;
+
+      /* ── Typography ── */
+      --text-xs:   12px;
+      --text-sm:   14px;
+      --text-md:   16px;
+      --text-lg:   18px;
+      --text-xl:   20px;
+      --lh-xs:     18px;
+      --lh-sm:     20px;
+      --lh-md:     24px;
+      --lh-lg:     28px;
+      --fw-regular:  400;
+      --fw-medium:   500;
+      --fw-semibold: 600;
+      --fw-bold:     700;
+
+      /* ── Button component tokens ── */
+      --btn-primary-bg:         var(--color-brand-600);
+      --btn-primary-fg:         #ffffff;
+      --btn-primary-border:     rgba(255,255,255,.12);
+      --btn-primary-bg-hover:   var(--color-brand-700);
+
+      --btn-secondary-bg:       #ffffff;
+      --btn-secondary-fg:       #414651;
+      --btn-secondary-border:   #d5d7da;
+      --btn-secondary-bg-hover: var(--color-gray-50);
+
+      /* ── Semantic aliases ── */
+      --bg:          var(--color-gray-25);
+      --bg2:         var(--color-gray-50);
+      --bg3:         var(--color-gray-100);
+      --border:      var(--color-gray-300);
+      --text:        var(--color-gray-900);
+      --muted:       var(--color-gray-500);
+      --accent:      var(--color-brand-600);
+      --accent-dark: var(--color-brand-700);
+      --accent-lite: var(--color-brand-50);
+      --tag-bg:      var(--color-brand-50);
+      --tag-text:    var(--color-brand-700);
+      --radius:      var(--radius-xl);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Aeonik', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      padding-top: 96px; /* floating nav: 16px gap + 64px height + 16px breathing room */
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    /* NAV — floating pill */
+    nav {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(0);
+      width: calc(100% - 48px);
+      max-width: 1120px;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--color-gray-200);
+      border-radius: var(--radius-2xl);
+      box-shadow: 0 4px 24px rgba(10,13,18,.08), 0 1px 4px rgba(10,13,18,.04);
+      z-index: 100;
+      transition: transform .4s cubic-bezier(.4,0,.2,1),
+                  opacity .4s,
+                  box-shadow .3s;
+    }
+    nav.nav--hidden {
+      transform: translateX(-50%) translateY(calc(-100% - 24px));
+      opacity: 0;
+      pointer-events: none;
+    }
+    nav.nav--scrolled {
+      box-shadow: 0 8px 32px rgba(10,13,18,.12), 0 1px 4px rgba(10,13,18,.06);
+    }
+    /* 3-col grid — guaranteed true center */
+    nav .container {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      height: 64px;
+      padding: 0 20px;
+      max-width: none;
+    }
+    /* Logo */
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-mark {
+      width: 32px; height: 32px;
+      background: var(--color-brand-600);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-xs), inset 0 0 0 1px rgba(255,255,255,.15);
+    }
+    .nav-logo-mark svg { display: block; }
+    .nav-logo-name {
+      font-weight: 800; font-size: 17px;
+      color: var(--text); letter-spacing: -.02em;
+    }
+    .nav-logo-name span { color: var(--accent); }
+    /* Center links — column 2, auto-centered by grid */
+    .nav-center {
+      display: flex; align-items: center; gap: 2px;
+    }
+    .nav-link {
+      color: var(--color-gray-600);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--fw-medium);
+      line-height: var(--lh-sm);
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      transition: color .15s, background .15s;
+      white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--text); background: var(--color-gray-50); }
+    /* Right actions — column 3, align right */
+    .nav-actions {
+      display: flex; align-items: center; gap: var(--spacing-lg);
+      justify-content: flex-end;
+    }
+
+    /* HERO */
+    .hero {
+      padding: 120px 0 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Grid check pattern from Figma 4931:463190 */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, #e9eaeb 1px, transparent 1px),
+        linear-gradient(to bottom, #e9eaeb 1px, transparent 1px);
+      background-size: 96px 96px;
+      -webkit-mask-image: radial-gradient(ellipse 90% 110% at 50% 30%, rgba(0,0,0,.65) 0%, rgba(0,0,0,.35) 50%, transparent 80%);
+      mask-image: radial-gradient(ellipse 90% 110% at 50% 30%, rgba(0,0,0,.65) 0%, rgba(0,0,0,.35) 50%, transparent 80%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* Animated shimmer cells */
+    .hero-cells {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .hero-cell {
+      position: absolute;
+      width: 96px;
+      height: 96px;
+      background: var(--color-gray-200);
+      border-radius: 2px;
+      animation: cellShimmer var(--d, 3s) var(--delay, 0s) ease-in-out infinite;
+      opacity: 0.15;
+    }
+    @keyframes cellShimmer {
+      0%,100% { opacity: var(--lo, .1); }
+      50%      { opacity: var(--hi, .55); }
+    }
+    .hero .container { position: relative; z-index: 1; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent-lite);
+      color: var(--tag-text);
+      border: 1px solid #e9d7fe;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .tag-dot {
+      width: 6px;
+      height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+    }
+    h1 {
+      font-size: clamp(40px, 7vw, 72px);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -.035em;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+    h1 em {
+      font-style: normal;
+      position: relative;
+      display: inline-block;
+    }
+    h1 em::after { display: none; }
+    .hero-sub {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.65;
+      font-weight: 400;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+    /* ── Buttons 1:1 from Figma UI Kit ── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-md);
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-fg);
+      padding: 12px var(--spacing-2xl);
+      border-radius: var(--radius-md);
+      border: 2px solid var(--btn-primary-border);
+      font-family: inherit;
+      font-size: var(--text-sm);
+      font-weight: var(--fw-semibold);
+      line-height: var(--lh-sm);
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background .15s ease, box-shadow .15s ease;
+      box-shadow: var(--shadow-btn);
+      position: relative;
+    }
+    .btn-primary:hover {
+      background: var(--btn-primary-bg-hover);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-md);
+      background: var(--btn-secondary-bg);
+      color: var(--btn-secondary-fg);
+      padding: 12px var(--spacing-2xl);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--btn-secondary-border);
+      font-family: inherit;
+      font-size: var(--text-sm);
+      font-weight: var(--fw-semibold);
+      line-height: var(--lh-sm);
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background .15s ease;
+      box-shadow: var(--shadow-btn);
+    }
+    .btn-ghost:hover { background: var(--btn-secondary-bg-hover); }
+
+    /* nav button — md size exact */
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-fg);
+      padding: 10px var(--spacing-xl);
+      border-radius: var(--radius-md);
+      border: 2px solid var(--btn-primary-border);
+      font-family: inherit;
+      font-size: var(--text-sm);
+      font-weight: var(--fw-semibold);
+      line-height: var(--lh-sm);
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background .15s ease;
+      box-shadow: var(--shadow-btn);
+    }
+    .nav-cta:hover { background: var(--btn-primary-bg-hover); }
+
+    /* Language switch */
+    .lang-switch {
+      height: 40px;
+      padding: 0 14px;
+      background: transparent;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-full);
+      color: var(--text);
+      font-family: inherit;
+      font-size: var(--text-sm);
+      font-weight: var(--fw-semibold);
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+      white-space: nowrap;
+      letter-spacing: .03em;
+    }
+    .lang-switch:hover { background: var(--bg2); border-color: var(--color-gray-400); }
+
+    /* white CTA button on dark bg */
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--spacing-md);
+      background: #ffffff;
+      color: var(--color-brand-700);
+      padding: 12px var(--spacing-2xl);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-brand-200);
+      font-family: inherit;
+      font-size: var(--text-sm);
+      font-weight: var(--fw-semibold);
+      line-height: var(--lh-sm);
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background .15s ease;
+      box-shadow: var(--shadow-xs);
+    }
+    .btn-white:hover { background: var(--color-brand-50); }
+    .hero-note {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Decorative underline on a hero word */
+    .deco-word {
+      position: relative;
+      display: inline-block;
+    }
+    .deco-svg {
+      position: absolute;
+      bottom: -10px;
+      left: -4px;
+      width: calc(100% + 8px);
+      height: 14px;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+
+    /* MARQUEE */
+    .marquee-wrap {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      height: 40px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      background: var(--bg2);
+    }
+    .marquee-track {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      animation: marquee 22s linear infinite;
+      width: max-content;
+      flex-shrink: 0;
+    }
+    .marquee-item {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      white-space: nowrap;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* SECTION COMMONS */
+    section { padding: 96px 0; }
+    .section-eyebrow {
+      font-size: var(--text-md);
+      font-weight: var(--fw-semibold);
+      letter-spacing: 0;
+      text-transform: none;
+      color: var(--color-brand-700);
+      margin-bottom: var(--spacing-lg);
+    }
+    h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 600;
+      letter-spacing: -.03em;
+      line-height: 1.12;
+      margin-bottom: 48px;
+    }
+
+    /* PAIN — Figma "Icon cards 01" */
+    .pain { background: #ffffff; }
+    .pain .section-heading { max-width: 640px; margin: 0 auto 64px; text-align: center; }
+
+    .pain h2 {
+      font-size: 36px;
+      font-weight: var(--fw-semibold);
+      letter-spacing: -.02em;
+      line-height: 44px;
+      margin-bottom: var(--spacing-2xl);
+    }
+    .pain .section-desc {
+      font-size: 16px;
+      color: var(--color-gray-600);
+      line-height: 1.6;
+    }
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    /* Bento spans — wide cards */
+    .pain-card:nth-child(1) { grid-column: span 2; }
+    .pain-card:nth-child(4) { grid-column: span 2; }
+    .pain-card {
+      background: var(--color-gray-50);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+      min-height: 280px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* inner spotlight — follows cursor */
+    .pain-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        600px circle at var(--mx, -999px) var(--my, -999px),
+        rgba(127,86,217,.07),
+        transparent 55%
+      );
+      pointer-events: none;
+      z-index: 0;
+      border-radius: inherit;
+      transition: background .05s linear;
+    }
+    /* Electric Border — rotating conic arc on hover */
+    .pain-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      padding: 1.5px;
+      border-radius: inherit;
+      background: conic-gradient(
+        from var(--eb-angle),
+        transparent 0%,
+        transparent 65%,
+        rgba(127, 86, 217, .5)  75%,
+        rgba(183, 148, 246, .9) 83%,
+        #fff                    88%,
+        rgba(183, 148, 246, .9) 93%,
+        rgba(127, 86, 217, .5)  98%,
+        transparent 100%
+      );
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity .35s ease;
+    }
+    .pain-card:hover::after {
+      opacity: 1;
+      animation: eb-rotate 2.4s linear infinite;
+    }
+    @keyframes eb-rotate {
+      to { --eb-angle: 360deg; }
+    }
+    /* keep card children above pseudo-elements */
+    .pain-card > * { position: relative; z-index: 1; }
+    .pain-icon-wrap {
+      width: 48px;
+      height: 48px;
+      background: var(--color-brand-600);
+      border-radius: var(--radius-lg);
+      border: 2px solid rgba(255,255,255,.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #fff;
+      box-shadow: var(--shadow-xs), var(--shadow-inner-border), var(--shadow-inner-bottom);
+    }
+    .pain-card-content { display: flex; flex-direction: column; gap: var(--spacing-md); }
+    .pain-card h3 {
+      font-size: var(--text-xl);
+      font-weight: var(--fw-semibold);
+      line-height: 30px;
+      color: var(--text);
+      letter-spacing: -.02em;
+      margin-bottom: 0;
+    }
+    .pain-card p {
+      font-size: var(--text-md);
+      color: var(--color-gray-600);
+      line-height: var(--lh-md);
+    }
+
+    /* SERVICES */
+    .services { background: #fff; padding-bottom: 0; }
+    .svc-header {
+      background: #fff;
+      padding: 0 0 48px;
+    }
+    .svc-heading { text-align: center; max-width: 640px; margin: 0 auto; }
+    .services h2 {
+      font-size: clamp(28px, 3.5vw, 44px); font-weight: var(--fw-semibold);
+      letter-spacing: -.02em; line-height: 1.12; margin-bottom: 20px;
+    }
+    .services .section-desc { font-size: 16px; color: var(--color-gray-600); line-height: 1.6; margin-bottom: 28px; }
+
+    /* Controls: button + pagination, stacked, centered */
+    .svc-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .svc-pagination {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .svc-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background .2s ease, width .2s ease, border-radius .2s ease;
+      flex-shrink: 0;
+    }
+    .svc-dot:hover { background: var(--color-gray-400); }
+    .svc-dot--active {
+      background: var(--accent);
+      width: 24px;
+      border-radius: 4px;
+    }
+
+    /* Slider */
+    .svc-mockup-wrap {
+      margin-top: 0;
+      padding-bottom: 0;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Figma Container: px-32 py-32, Content: h-560 w-1216 */
+    .svc-slider {
+      position: relative;
+      height: 560px;
+      overflow: hidden;
+    }
+    .svc-slide {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      transform: translateX(calc(100% + 32px));
+      transition: transform .6s cubic-bezier(.4, 0, .2, 1);
+      pointer-events: none;
+    }
+    .svc-slide--active {
+      transform: translateX(0);
+      pointer-events: auto;
+      z-index: 1;
+    }
+    .svc-slide--exit {
+      transform: translateX(calc(-100% - 32px));
+      z-index: 0;
+    }
+    /* Figma: outer frame — rounded-[32px] border-2 #d5d7da p-[4px] shadow */
+    .svc-mockup-frame {
+      background: #ffffff;
+      border: 2px solid #d5d7da;
+      border-radius: 32px;
+      padding: 4px;
+      box-shadow: 0 12px 16px -4px rgba(10,13,18,.08),
+                  0 4px 6px -2px rgba(10,13,18,.03),
+                  0 2px 2px -1px rgba(10,13,18,.04);
+    }
+    /* Figma: inner-shadow layer — rounded-[28px] p-[4px] overflow-hidden bg-white + inset shadow */
+    .svc-mockup-shadow {
+      position: relative;
+      border-radius: 28px;
+      padding: 4px;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: inset 0 0 6px 2px rgba(10,13,18,.08),
+                  inset 0 0 4px 2px rgba(10,13,18,.03);
+    }
+    /* Figma: mockup-wrapper — rounded-[24px] border-2 #e9eaeb bg-[#fafafa] overflow-hidden */
+    .svc-mockup-inner {
+      border: 2px solid #e9eaeb;
+      border-radius: 24px;
+      background: #fafafa;
+      overflow: hidden;
+    }
+    /* Figma: image — w-[1200px] h-[800px], displayed at 100% width → proportional height ~800px */
+    .svc-mockup-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-position: top left;
+    }
+    /* HOW — overlaps services image from below */
+    .how { background: var(--bg2); position: relative; z-index: 1; margin-top: -64px; }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: calc(12.5% + 12px);
+      right: calc(12.5% + 12px);
+      height: 1px;
+      background: var(--border);
+    }
+    .step { padding: 0 16px; }
+    .step-num {
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 15px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .step h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -.01em;
+    }
+    .step p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* STATS */
+    .stats-section {}
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .stat {
+      padding: 40px 28px;
+      border-right: 1px solid var(--border);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num {
+      font-size: 40px;
+      font-weight: 600;
+      letter-spacing: -.04em;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+    /* STORY — overlaps services mockup from below (Figma clip effect) */
+    .story {
+      background: var(--bg);
+      position: relative;
+      z-index: 1;
+      margin-top: -96px;
+    }
+    .story-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .story-narrative {
+      font-size: clamp(32px, 5.5vw, 60px);
+      font-weight: 600;
+      letter-spacing: -.035em;
+      line-height: 1.12;
+      color: var(--text);
+    }
+    .story-narrative .muted {
+      color: var(--muted);
+      font-weight: 500;
+      font-size: .55em;
+      letter-spacing: -.01em;
+      display: block;
+      margin: 12px 0 4px;
+    }
+    .story-narrative .highlight {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      padding: 0 14px 4px;
+      border-radius: 8px;
+    }
+    .story-narrative .num {
+      font-size: 1.2em;
+      letter-spacing: -.05em;
+    }
+    .story-break {
+      display: block;
+      height: 48px;
+    }
+    .story-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      margin-top: 72px;
+      padding-top: 48px;
+    }
+    .story-summary-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 0 16px;
+      border-right: 1px solid var(--border);
+    }
+    .story-summary-item:last-child { border-right: none; }
+    .story-summary-num {
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -.04em;
+      line-height: 1;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .story-summary-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .story-summary-sep { display: none; }
+    @media (max-width: 600px) {
+      .story-summary {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0;
+      }
+      .story-summary-item {
+        padding: 24px 12px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .story-summary-item:nth-child(4n+1) { border-right: 1px solid var(--border); }
+      .story-summary-item:nth-last-child(-n+3) { border-bottom: none; }
+      .story-summary-num { font-size: 28px; }
+    }
+
+    .story-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: var(--border);
+      border-radius: 50%;
+      margin: 0 8px;
+      vertical-align: middle;
+      position: relative;
+      top: -4px;
+    }
+
+    /* Story scroll-reveal — word-by-word blur */
+    .sr {
+      display: block;
+    }
+    .word {
+      display: inline;
+      opacity: 0.1;
+      filter: blur(6px);
+      transition: opacity 0.5s ease, filter 0.5s ease;
+      will-change: opacity, filter;
+    }
+    .word.word--on {
+      opacity: 1;
+      filter: blur(0px);
+    }
+
+    /* CTA */
+    .cta-section { background: var(--accent); padding: 96px 0 96px; }
+    .cta-section .container { text-align: center; }
+    .cta-section h2 { color: #fff; margin-bottom: 16px; }
+    .cta-section p { color: rgba(255,255,255,.7); font-size: var(--text-md); margin-bottom: 40px; }
+    .cta-section p.cta-note { margin-top: 12px; margin-bottom: 0; padding-bottom: 0; font-size: 14px; color: rgba(255,255,255,.5); line-height: 1.5; }
+
+    /* BANNER — floating, appears on story-summary scroll */
+    .banner {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(130px);
+      z-index: 200;
+      width: 640px;
+      max-width: calc(100vw - 48px);
+      background: rgba(105,65,198,.72);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-lg);
+      box-shadow: 0px 12px 32px -4px rgba(105,65,198,.35),
+                  0px 4px 16px -2px rgba(105,65,198,.2),
+                  inset 0 1px 0 rgba(255,255,255,.12);
+      transition: transform .45s cubic-bezier(.34,1.5,.64,1), opacity .3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .banner--visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .banner--hidden {
+      transform: translateX(-50%) translateY(130px) !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+    .banner-icon {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      background: var(--color-brand-600);
+      border-radius: var(--radius-lg);
+      border: 2px solid rgba(255,255,255,.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: var(--shadow-btn);
+    }
+    .banner-text {
+      flex: 1;
+      min-width: 0;
+      line-height: 1;
+      text-align: left;
+    }
+    .banner-title {
+      font-size: var(--text-md);
+      font-weight: var(--fw-semibold);
+      line-height: var(--lh-md);
+      color: #ffffff;
+    }
+    .banner-sub {
+      font-size: var(--text-sm);
+      font-weight: var(--fw-regular);
+      line-height: var(--lh-sm);
+      color: var(--color-brand-200);
+      margin-top: 2px;
+    }
+    .banner-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      flex-shrink: 0;
+    }
+    .banner-close {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: rgba(255,255,255,.7);
+      flex-shrink: 0;
+      transition: background .15s, color .15s;
+    }
+    .banner-close:hover { background: rgba(255,255,255,.12); color: #fff; }
+    /* Mobile banner variant */
+    .banner--mobile {
+      display: none;
+      flex-direction: column;
+      gap: var(--spacing-xl);
+      padding: var(--spacing-xl);
+      left: 8px;
+      right: 8px;
+      width: auto;
+      max-width: none;
+      transform: translateX(0) translateY(130px);
+    }
+    .banner--mobile.banner--visible {
+      transform: translateX(0) translateY(0);
+    }
+    .banner--mobile.banner--hidden {
+      transform: translateX(0) translateY(130px) !important;
+    }
+    .banner-close--mobile {
+      position: absolute;
+      top: var(--spacing-md);
+      right: var(--spacing-md);
+    }
+    .banner-mobile-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: #ffffff;
+      color: var(--color-brand-700);
+      padding: 10px var(--spacing-xl);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-brand-200);
+      font-family: inherit;
+      font-size: var(--text-sm);
+      font-weight: var(--fw-semibold);
+      line-height: var(--lh-sm);
+      text-decoration: none;
+      box-shadow: var(--shadow-btn);
+    }
+    @media (max-width: 650px) {
+      .banner:not(.banner--mobile) { display: none !important; }
+      .banner--mobile { display: flex !important; }
+    }
+    /* Mobile banner inner layout */
+    .banner--mobile .banner-icon { display: none; }
+    .banner--mobile .banner-text {
+      text-align: center;
+      padding-right: 44px; /* clear of absolute close button */
+    }
+    .banner--mobile .banner-sub {
+      display: block;
+      margin-top: 4px;
+      font-size: var(--text-xs, 12px);
+      color: var(--color-brand-200);
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 28px 0;
+      border-top: 1px solid var(--border);
+    }
+    footer .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-logo {
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -.02em;
+    }
+    .footer-logo span { opacity: .35; }
+    footer p { font-size: 13px; color: var(--muted); }
+
+    /* RESPONSIVE */
+
+    /* ── 768-1023px: bento collapses to 2-col, services stays proportional ── */
+    @media (max-width: 1023px) {
+      .pain-grid { grid-template-columns: repeat(2, 1fr); }
+      .pain-card:nth-child(1),
+      .pain-card:nth-child(4) { grid-column: span 1; }
+      .pain-card { min-height: auto; gap: 32px; }
+      .svc-slider { height: 440px; }
+    }
+
+    /* ── ≤768px ── */
+    @media (max-width: 768px) {
+      .svc-header { padding: 64px 0 40px; }
+      .svc-slider { height: 360px; }
+    }
+
+    /* ── ≤480px: pain stays column ── */
+    @media (max-width: 480px) {
+      .pain-card { gap: 12px; padding: 20px; }
+    }
+
+    /* ── ≤700px: mobile general ── */
+    @media (max-width: 700px) {
+      body { padding-top: 80px; }
+      section { padding: 64px 0; }
+      .container { padding: 0 20px; }
+      .hero { padding: 72px 0 56px; }
+      h1 { font-size: 32px; }
+      h2 { font-size: 32px !important; line-height: 1.2; }
+      /* pain cards — 1 col, vertical stack: icon / title / subtitle */
+      .pain-grid { grid-template-columns: 1fr; }
+      .pain-card { flex-direction: column; gap: 16px; min-height: auto; padding: 24px; }
+      .pain-card:nth-child(1),
+      .pain-card:nth-child(4) { grid-column: span 1; }
+      .steps { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .steps::before { display: none; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .stat { border-right: none; border-bottom: 1px solid var(--border); }
+      .stat:nth-child(2n) { border-right: none; }
+      footer .container { flex-direction: column; gap: 8px; text-align: center; }
+      .nav-center { display: none; }
+      nav { width: calc(100% - 32px); top: 12px; }
+      nav .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 16px;
+        height: 56px;
+      }
+      .svc-header { padding: 40px 0 28px; }
+      .svc-slider { height: 240px; }
+      .svc-heading { text-align: center; }
+      .svc-controls { align-items: center; }
+      .svc-mockup-wrap { padding-bottom: 64px; }
+      .lang-switch { height: 32px; padding: 0 10px; font-size: 13px; }
+      .nav-cta { height: 32px; padding: 0 14px; font-size: 13px; }
+      .hero::before {
+        background-size: 64px 64px;
+        -webkit-mask-image: radial-gradient(ellipse 140% 70% at 50% 0%, rgba(0,0,0,.55) 0%, rgba(0,0,0,.15) 55%, transparent 90%);
+        mask-image: radial-gradient(ellipse 140% 70% at 50% 0%, rgba(0,0,0,.55) 0%, rgba(0,0,0,.15) 55%, transparent 90%);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="siteNav">
+    <div class="container">
+      <!-- Logo -->
+      <a href="#" class="nav-logo">
+        <span class="nav-logo-name">SOLADEV</span>
+      </a>
+      <!-- Center nav -->
+      <div class="nav-center" role="navigation" aria-label="Основное меню">
+        <a href="#services" class="nav-link" data-i18n="nav-services">Услуги</a>
+        <a href="#story" class="nav-link" data-i18n="nav-about">Обо&nbsp;мне</a>
+        <a href="#contact" class="nav-link" data-i18n="nav-contact">Контакты</a>
+      </div>
+      <!-- Actions -->
+      <div class="nav-actions">
+        <a href="https://t.me/yakovvortep" class="nav-cta" data-i18n="nav-cta">Обсудить проект</a>
+        <button class="lang-switch" id="langSwitch">EN</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-cells" aria-hidden="true"></div>
+    <div class="container">
+      <div class="tag">
+        <span class="tag-dot"></span>
+        <span data-i18n="hero-tag">Разработка под ключ</span>
+      </div>
+      <h1 data-i18n-html="hero-h1">Перестаньте<br>терять деньги<br>на <em>рутине</em></h1>
+      <p class="hero-sub" data-i18n="hero-sub">
+        Делаю боты, SaaS-сервисы и админки которые работают вместо вас — пока вы занимаетесь бизнесом
+      </p>
+      <div class="hero-btns">
+        <a href="https://t.me/yakovvortep" class="btn-primary" data-i18n="hero-btn1">Обсудить проект</a>
+        <a href="#services" class="btn-ghost" data-i18n="hero-btn2">Что я делаю</a>
+      </div>
+      <p class="hero-note" data-i18n-html="hero-note">Первая консультация бесплатно ·<br>Ответ в течение 3 часов</p>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Telegram-боты</span>
+      <span class="marquee-item">•</span>
+      <span class="marquee-item">Админ-панели</span>
+      <span class="marquee-item">•</span>
+      <span class="marquee-item">SaaS-сервисы</span>
+      <span class="marquee-item">•</span>
+      <span class="marquee-item">Автоматизация</span>
+      <span class="marquee-item">•</span>
+      <span class="marquee-item">CRM-системы</span>
+      <span class="marquee-item">•</span>
+      <span class="marquee-item">Интеграции</span>
+      <span class="marquee-item">•</span>
+      <span class="marquee-item">Telegram-боты</span>
+      <span class="marquee-item">•</span>
+      <span class="marquee-item">Админ-панели</span>
+      <span class="marquee-item">•</span>
+      <span class="marquee-item">SaaS-сервисы</span>
+      <span class="marquee-item">•</span>
+      <span class="marquee-item">Автоматизация</span>
+      <span class="marquee-item">•</span>
+      <span class="marquee-item">CRM-системы</span>
+      <span class="marquee-item">•</span>
+      <span class="marquee-item">Интеграции</span>
+      <span class="marquee-item">•</span>
+    </div>
+  </div>
+
+  <!-- PAIN -->
+  <section class="pain">
+    <div class="container">
+      <div class="section-heading">
+        <div class="section-eyebrow" data-i18n="pain-eyebrow">Узнаёте себя?</div>
+        <h2 data-i18n="pain-h2">Знакомые проблемы</h2>
+        <p class="section-desc" data-i18n="pain-desc">Большинство малых бизнесов теряют клиентов и деньги из-за одних и тех же причин. Проверьте себя.</p>
+      </div>
+      <div class="pain-grid">
+        <div class="pain-card">
+          <div class="pain-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <div class="pain-card-content">
+            <h3 data-i18n="pain1-h">Рутина ежедневно</h3>
+            <p data-i18n="pain1-p">Запись клиентов, напоминания, отчёты — вручную каждый день. Это не работа, это колесо белки</p>
+          </div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <line x1="17" y1="8" x2="23" y2="14"/>
+              <line x1="23" y1="8" x2="17" y2="14"/>
+            </svg>
+          </div>
+          <div class="pain-card-content">
+            <h3 data-i18n="pain2-h">Клиент уходит</h3>
+            <p data-i18n="pain2-p">Клиент не получил ответ за 15 минут и ушёл к конкуренту. Пока вы думаете — теряете деньги</p>
+          </div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+              <line x1="2" y1="20" x2="22" y2="20"/>
+            </svg>
+          </div>
+          <div class="pain-card-content">
+            <h3 data-i18n="pain3-h">Бизнес вслепую</h3>
+            <p data-i18n="pain3-p">Нет дашборда — нет картины. Решения принимаются на ощущениях, а не по цифрам</p>
+          </div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <div class="pain-card-content">
+            <h3 data-i18n="pain4-h">Агентства подводят</h3>
+            <p data-i18n="pain4-p">Большой ценник, долгие согласования, предоплата — и пропали. Знакомая история?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <div class="svc-header">
+      <div class="container">
+        <div class="svc-heading">
+          <p class="section-eyebrow" data-i18n="svc-eyebrow">Услуги</p>
+          <h2 data-i18n="svc-h2">Что я&nbsp;делаю</h2>
+          <p class="section-desc" data-i18n="svc-desc">Telegram-боты, SaaS-сервисы, CRM и интеграции — разрабатываю цифровые инструменты которые работают вместо вас</p>
+          <div class="svc-controls">
+            <a href="https://t.me/yakovvortep" class="btn-primary" data-i18n="nav-cta">Обсудить проект</a>
+            <div class="svc-pagination" id="svcPagination">
+              <button class="svc-dot svc-dot--active" data-idx="0" aria-label="Слайд 1"></button>
+              <button class="svc-dot" data-idx="1" aria-label="Слайд 2"></button>
+              <button class="svc-dot" data-idx="2" aria-label="Слайд 3"></button>
+              <button class="svc-dot" data-idx="3" aria-label="Слайд 4"></button>
+              <button class="svc-dot" data-idx="4" aria-label="Слайд 5"></button>
+              <button class="svc-dot" data-idx="5" aria-label="Слайд 6"></button>
+              <button class="svc-dot" data-idx="6" aria-label="Слайд 7"></button>
+              <button class="svc-dot" data-idx="7" aria-label="Слайд 8"></button>
+              <button class="svc-dot" data-idx="8" aria-label="Слайд 9"></button>
+              <button class="svc-dot" data-idx="9" aria-label="Слайд 10"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="svc-mockup-wrap">
+      <div class="container">
+        <div class="svc-slider" id="svcSlider">
+          <div class="svc-slide svc-slide--active"><div class="svc-mockup-frame"><div class="svc-mockup-shadow"><div class="svc-mockup-inner"><img src="https://www.figma.com/api/mcp/asset/dfd83134-7d48-4482-88f0-84056be21f9f" alt="Слайд 1" class="svc-mockup-img"/></div></div></div></div>
+          <div class="svc-slide"><div class="svc-mockup-frame"><div class="svc-mockup-shadow"><div class="svc-mockup-inner"><img src="https://www.figma.com/api/mcp/asset/dfd83134-7d48-4482-88f0-84056be21f9f" alt="Слайд 2" class="svc-mockup-img"/></div></div></div></div>
+          <div class="svc-slide"><div class="svc-mockup-frame"><div class="svc-mockup-shadow"><div class="svc-mockup-inner"><img src="https://www.figma.com/api/mcp/asset/dfd83134-7d48-4482-88f0-84056be21f9f" alt="Слайд 3" class="svc-mockup-img"/></div></div></div></div>
+          <div class="svc-slide"><div class="svc-mockup-frame"><div class="svc-mockup-shadow"><div class="svc-mockup-inner"><img src="https://www.figma.com/api/mcp/asset/dfd83134-7d48-4482-88f0-84056be21f9f" alt="Слайд 4" class="svc-mockup-img"/></div></div></div></div>
+          <div class="svc-slide"><div class="svc-mockup-frame"><div class="svc-mockup-shadow"><div class="svc-mockup-inner"><img src="https://www.figma.com/api/mcp/asset/dfd83134-7d48-4482-88f0-84056be21f9f" alt="Слайд 5" class="svc-mockup-img"/></div></div></div></div>
+          <div class="svc-slide"><div class="svc-mockup-frame"><div class="svc-mockup-shadow"><div class="svc-mockup-inner"><img src="https://www.figma.com/api/mcp/asset/dfd83134-7d48-4482-88f0-84056be21f9f" alt="Слайд 6" class="svc-mockup-img"/></div></div></div></div>
+          <div class="svc-slide"><div class="svc-mockup-frame"><div class="svc-mockup-shadow"><div class="svc-mockup-inner"><img src="https://www.figma.com/api/mcp/asset/dfd83134-7d48-4482-88f0-84056be21f9f" alt="Слайд 7" class="svc-mockup-img"/></div></div></div></div>
+          <div class="svc-slide"><div class="svc-mockup-frame"><div class="svc-mockup-shadow"><div class="svc-mockup-inner"><img src="https://www.figma.com/api/mcp/asset/dfd83134-7d48-4482-88f0-84056be21f9f" alt="Слайд 8" class="svc-mockup-img"/></div></div></div></div>
+          <div class="svc-slide"><div class="svc-mockup-frame"><div class="svc-mockup-shadow"><div class="svc-mockup-inner"><img src="https://www.figma.com/api/mcp/asset/dfd83134-7d48-4482-88f0-84056be21f9f" alt="Слайд 9" class="svc-mockup-img"/></div></div></div></div>
+          <div class="svc-slide"><div class="svc-mockup-frame"><div class="svc-mockup-shadow"><div class="svc-mockup-inner"><img src="https://www.figma.com/api/mcp/asset/dfd83134-7d48-4482-88f0-84056be21f9f" alt="Слайд 10" class="svc-mockup-img"/></div></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STORY -->
+  <section class="story" id="story">
+    <div class="container">
+      <div class="story-inner">
+      <p class="story-narrative">
+        <span class="sr" data-i18n-html="story-1">Вы пишете —<br>я отвечаю<br>в течение 3 часов</span>
+
+        <span class="story-break"></span>
+
+        <span class="sr" data-i18n-html="story-2">Созваниваемся,<br>разбираем задачу.</span>
+
+        <span class="story-break"></span>
+
+        <span class="sr" data-i18n-html="story-3">Получаете чёткий план —<br>сроки на MVP.</span>
+
+        <span class="story-break"></span>
+
+        <span class="sr" data-i18n-html="story-4">За <span class="highlight">14&nbsp;дней</span><br>проект готов.</span>
+
+        <span class="story-break"></span>
+
+        <span class="sr" data-i18n-html="story-5">Запускаем.<br>Я обучаю,<br>остаюсь рядом.</span>
+      </p>
+
+      </div>
+
+      <div class="story-summary">
+        <div class="story-summary-item">
+          <span class="story-summary-num">20+</span>
+          <span class="story-summary-label" data-i18n="stat1-label">проектов</span>
+        </div>
+        <div class="story-summary-sep"></div>
+        <div class="story-summary-item">
+          <span class="story-summary-num">14&nbsp;дн</span>
+          <span class="story-summary-label" data-i18n="stat2-label">средний срок</span>
+        </div>
+        <div class="story-summary-sep"></div>
+        <div class="story-summary-item">
+          <span class="story-summary-num">100%</span>
+          <span class="story-summary-label" data-i18n="stat3-label">возвращаются</span>
+        </div>
+        <div class="story-summary-sep"></div>
+        <div class="story-summary-item">
+          <span class="story-summary-num">3&nbsp;ч</span>
+          <span class="story-summary-label" data-i18n="stat4-label">время ответа</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="contact">
+    <div class="container">
+      <h2 data-i18n-html="cta-h2">Готовы автоматизировать<br>свой бизнес?</h2>
+      <a href="https://t.me/yakovvortep" class="btn-white" data-i18n="cta-btn">Написать в Telegram</a>
+      <p class="cta-note" data-i18n-html="cta-note">Бесплатная консультация ·<br>Без обязательств</p>
+    </div>
+  </section>
+
+  <!-- FLOATING BANNER — shown on story-summary enter -->
+  <div class="banner" id="ctaBanner" role="status">
+    <div class="banner-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 7L10.165 12.715C10.826 13.178 11.157 13.41 11.516 13.499C11.834 13.579 12.166 13.579 12.484 13.499C12.843 13.41 13.174 13.178 13.835 12.715L22 7M6.8 20H17.2C18.88 20 19.72 20 20.362 19.673C20.927 19.385 21.385 18.927 21.673 18.362C22 17.72 22 16.88 22 15.2V8.8C22 7.12 22 6.28 21.673 5.638C21.385 5.074 20.927 4.615 20.362 4.327C19.72 4 18.88 4 17.2 4H6.8C5.12 4 4.28 4 3.638 4.327C3.074 4.615 2.615 5.074 2.327 5.638C2 6.28 2 7.12 2 8.8V15.2C2 16.88 2 17.72 2.327 18.362C2.615 18.927 3.074 19.385 3.638 19.673C4.28 20 5.12 20 6.8 20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="banner-text">
+      <p class="banner-title" data-i18n="banner-title">Уже 20+ проектов запущено. Обсудим ваш?</p>
+      <p class="banner-sub" data-i18n="banner-sub">Бесплатная консультация · Ответ в течение 3 часов</p>
+    </div>
+    <div class="banner-actions">
+      <a href="https://t.me/yakovvortep" class="btn-white" style="font-size:var(--text-sm);padding:10px var(--spacing-xl);" data-i18n="banner-btn">Написать</a>
+      <button class="banner-close" id="bannerClose" aria-label="Закрыть">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- MOBILE BANNER (vertical, shown on mobile only) -->
+  <div class="banner banner--mobile" id="ctaBannerMobile" role="status">
+    <button class="banner-close banner-close--mobile" id="bannerCloseMobile" aria-label="Закрыть">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 5L5 15M5 5L15 15" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="banner-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"/>
+      </svg>
+    </div>
+    <div class="banner-text">
+      <p class="banner-title" data-i18n="banner-title-m">Уже 20+ проектов запущено</p>
+      <p class="banner-sub" data-i18n="banner-sub">Бесплатная консультация · Ответ за 3 часа</p>
+    </div>
+    <a href="https://t.me/yakovvortep" class="banner-mobile-btn" data-i18n="cta-btn">Написать в Telegram</a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-logo">SOLADEV</div>
+    </div>
+  </footer>
+
+  <script>
+    // ── i18n ──
+    (function () {
+      var T = {
+        ru: {
+          'nav-services': 'Услуги',
+          'nav-about':    'Обо мне',
+          'nav-contact':  'Контакты',
+          'nav-cta':      'Обсудить задачу',
+          'hero-tag':     'Разработка под ключ',
+          'hero-h1':      'Пока вы работаете<br>руками — конкурент<br>уже <em>автоматизировал</em>',
+          'hero-sub':     'Сделаю Telegram-бота, CRM или админку за 14 дней — и вы перестанете тратить 3 часа в день на то, что компьютер сделает за 3 секунды',
+          'hero-btn1':    'Обсудить задачу',
+          'hero-btn2':    'Что я делаю',
+          'hero-note':    'Первая консультация бесплатно ·<br>Ответ в течение 3 часов',
+          'pain-eyebrow': 'Узнаёте себя?',
+          'pain-h2':      'Почему малый бизнес теряет деньги каждый день',
+          'pain-desc':    'Большинство малых бизнесов теряют клиентов и деньги из-за одних и тех же причин. Проверьте себя.',
+          'pain1-h': 'Рутина съедает день',
+          'pain1-p': 'Запись клиентов, напоминания, отчёты — вручную каждый день. Это не работа, это колесо белки',
+          'pain2-h': 'Клиент не ждёт',
+          'pain2-p': 'Клиент не получил ответ за 15 минут и ушёл к конкуренту. Пока вы думаете — теряете деньги',
+          'pain3-h': 'Решения вслепую',
+          'pain3-p': 'Нет дашборда — нет картины. Решения принимаются на ощущениях, а не по цифрам',
+          'pain4-h': 'Агентства подводят',
+          'pain4-p': 'Большой договор, долгие созвоны, предоплата — и тишина. Я работаю иначе: результат через 14 дней, а не обещания',
+          'svc-eyebrow': 'Услуги',
+          'svc-h2':      'Инструменты, которые работают вместо вас',
+          'svc-desc':    'Telegram-боты, SaaS-сервисы, CRM и интеграции — разрабатываю цифровые инструменты которые работают вместо вас',
+          'story-1': 'Вы пишете —<br>я отвечаю<br>в течение 3 часов',
+          'story-2': 'Созваниваемся,<br>разбираем задачу.',
+          'story-3': 'Получаете чёткий план —<br>сроки на MVP.',
+          'story-4': 'За <span class="highlight">14 дней</span><br>проект готов.',
+          'story-5': 'Запускаем.<br>Я обучаю,<br>остаюсь рядом.',
+          'stat1-label': 'проектов',
+          'stat2-label': 'средний срок',
+          'stat3-label': 'возвращаются',
+          'stat4-label': 'время ответа',
+          'cta-h2':   'Есть задача?<br>Напишите — разберём вместе',
+          'cta-p':    'Бесплатно · Без обязательств · Отвечаю в течение 3 часов',
+          'cta-btn':  'Написать в Telegram',
+          'cta-note': 'Бесплатная консультация ·<br>Без обязательств',
+          'banner-title':   'Уже 20+ проектов запущено. Обсудим ваш?',
+          'banner-title-m': 'Уже 20+ проектов запущено',
+          'banner-sub':     'Бесплатная консультация · Ответ в течение 3 часов',
+          'banner-btn':     'Написать',
+          'footer-sub':     'Цифровые инструменты для малого бизнеса'
+        },
+        en: {
+          'nav-services': 'Services',
+          'nav-about':    'About',
+          'nav-contact':  'Contact',
+          'nav-cta':      'Discuss task',
+          'hero-tag':     'Turnkey development',
+          'hero-h1':      'While you do it by hand —<br>your competitor<br>already <em>automated</em>',
+          'hero-sub':     "I'll build a Telegram bot, CRM or admin panel in 14 days — and you'll stop spending 3 hours a day on what a computer does in 3 seconds",
+          'hero-btn1':    'Discuss task',
+          'hero-btn2':    'What I do',
+          'hero-note':    'First consultation free ·<br>Reply within 3 hours',
+          'pain-eyebrow': 'Sound familiar?',
+          'pain-h2':      'Why small businesses lose money every day',
+          'pain-desc':    'Most small businesses lose clients and money for the same reasons. Check yourself.',
+          'pain1-h': 'Routine eats your day',
+          'pain1-p': 'Booking clients, reminders, reports — manually every day. That\'s not work, that\'s a hamster wheel',
+          'pain2-h': "Clients don't wait",
+          'pain2-p': 'A client didn\'t get a reply in 15 minutes and went to a competitor. While you think — you lose money',
+          'pain3-h': 'Decisions in the dark',
+          'pain3-p': 'No dashboard — no picture. Decisions are made on gut feeling, not numbers',
+          'pain4-h': 'Agencies disappoint',
+          'pain4-p': 'Big contract, long calls, prepayment — and silence. I work differently: results in 14 days, not promises',
+          'svc-eyebrow': 'Services',
+          'svc-h2':      'Tools that work instead of you',
+          'svc-desc':    'Telegram bots, SaaS services, CRM and integrations — I build digital tools that work for you',
+          'story-1': 'You write —<br>I reply<br>within 3 hours',
+          'story-2': 'We hop on a call,<br>break down the task.',
+          'story-3': 'You get a clear plan —<br>timeline & MVP scope.',
+          'story-4': 'In <span class="highlight">14 days</span><br>project is ready.',
+          'story-5': 'We launch.<br>I train you,<br>stay close.',
+          'stat1-label': 'projects',
+          'stat2-label': 'avg timeline',
+          'stat3-label': 'return rate',
+          'stat4-label': 'reply time',
+          'cta-h2':   'Got a task?<br>Write to me — let\'s figure it out',
+          'cta-p':    'Free · No obligations · I reply within 3 hours',
+          'cta-btn':  'Write on Telegram',
+          'cta-note': 'Free consultation ·<br>No obligations',
+          'banner-title':   '20+ projects launched. Discuss yours?',
+          'banner-title-m': '20+ projects launched',
+          'banner-sub':     'Free consultation · Reply within 3 hours',
+          'banner-btn':     'Write',
+          'footer-sub':     'Digital tools for small business'
+        }
+      };
+
+      var currentLang = 'ru';
+
+      function applyLang(lang) {
+        currentLang = lang;
+        var dict = T[lang];
+
+        // text nodes
+        document.querySelectorAll('[data-i18n]').forEach(function (el) {
+          var key = el.getAttribute('data-i18n');
+          if (dict[key] !== undefined) el.textContent = dict[key];
+        });
+
+        // html nodes (headings with <br>, story spans, etc.)
+        document.querySelectorAll('[data-i18n-html]').forEach(function (el) {
+          var key = el.getAttribute('data-i18n-html');
+          if (dict[key] !== undefined) el.innerHTML = dict[key];
+        });
+
+        // re-split letters and re-observe after lang change
+        requestAnimationFrame(function () {
+          window._initWordReveal && window._initWordReveal();
+        });
+
+        // update button label
+        document.getElementById('langSwitch').textContent = lang === 'ru' ? 'EN' : 'RU';
+        document.documentElement.lang = lang;
+      }
+
+      document.getElementById('langSwitch').addEventListener('click', function () {
+        applyLang(currentLang === 'ru' ? 'en' : 'ru');
+      });
+
+      applyLang('ru');
+    })();
+
+    // ── Nav: hide on scroll down, show on scroll up ──
+    (function () {
+      var nav = document.getElementById('siteNav');
+      var prevY = window.scrollY;
+      var ticking = false;
+
+      window.addEventListener('scroll', function () {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+          var y = window.scrollY;
+          if (y > 80) {
+            nav.classList.toggle('nav--hidden', y > prevY);
+            nav.classList.add('nav--scrolled');
+          } else {
+            nav.classList.remove('nav--hidden', 'nav--scrolled');
+          }
+          prevY = y;
+          ticking = false;
+        });
+      }, { passive: true });
+    })();
+
+    // ── Banner (desktop + mobile) ──
+    (function () {
+      var bannerD = document.getElementById('ctaBanner');
+      var bannerM = document.getElementById('ctaBannerMobile');
+      var closeD  = document.getElementById('bannerClose');
+      var closeM  = document.getElementById('bannerCloseMobile');
+      var dismissed = false;
+
+      function show() {
+        if (dismissed) return;
+        if (bannerD) { bannerD.classList.add('banner--visible'); bannerD.classList.remove('banner--hidden'); }
+        if (bannerM) { bannerM.classList.add('banner--visible'); bannerM.classList.remove('banner--hidden'); }
+      }
+      function dismiss() {
+        dismissed = true;
+        if (bannerD) { bannerD.classList.remove('banner--visible'); bannerD.classList.add('banner--hidden'); }
+        if (bannerM) { bannerM.classList.remove('banner--visible'); bannerM.classList.add('banner--hidden'); }
+      }
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) { if (entry.isIntersecting) show(); });
+      }, { threshold: 0.4 });
+
+      var target = document.querySelector('.story-summary');
+      if (target) observer.observe(target);
+      if (closeD) closeD.addEventListener('click', dismiss);
+      if (closeM) closeM.addEventListener('click', dismiss);
+    })();
+
+    // ── Story word-by-word blur reveal ──
+    (function () {
+      function splitIntoWords(el) {
+        var nodes = Array.from(el.childNodes);
+        el.innerHTML = '';
+        nodes.forEach(function (node) {
+          if (node.nodeType === 3) {
+            node.textContent.split(/(\s+)/).forEach(function (part) {
+              if (/^\s+$/.test(part)) {
+                el.appendChild(document.createTextNode(part));
+              } else if (part.length > 0) {
+                var w = document.createElement('span');
+                w.className = 'word';
+                w.textContent = part;
+                el.appendChild(w);
+              }
+            });
+          } else if (node.nodeName === 'BR') {
+            el.appendChild(document.createElement('br'));
+          } else {
+            var w = document.createElement('span');
+            w.className = 'word';
+            w.appendChild(node.cloneNode(true));
+            el.appendChild(w);
+          }
+        });
+      }
+
+      window.splitIntoWords = splitIntoWords;
+
+      window.updateWords = function () {
+        var readLine = window.innerHeight * 0.66;
+        document.querySelectorAll('.sr .word').forEach(function (w) {
+          var rect = w.getBoundingClientRect();
+          var mid = rect.top + rect.height / 2;
+          w.classList.toggle('word--on', mid < readLine);
+        });
+      };
+
+      document.querySelectorAll('.sr').forEach(function (el) { splitIntoWords(el); });
+      window.updateWords();
+
+      var ticking = false;
+      window.addEventListener('scroll', function () {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () { window.updateWords(); ticking = false; });
+      }, { passive: true });
+
+      window.addEventListener('resize', function () { window.updateWords(); }, { passive: true });
+
+      window._initWordReveal = function () {
+        document.querySelectorAll('.sr').forEach(function (el) { splitIntoWords(el); });
+        window.updateWords();
+      };
+    })();
+
+    // ── Services slider (crossfade + slide) ──
+    (function () {
+      var slides  = Array.from(document.querySelectorAll('#svcSlider .svc-slide'));
+      var dots    = Array.from(document.querySelectorAll('#svcPagination .svc-dot'));
+      var total   = slides.length;
+      var current = 0;
+      var timer;
+      var transitioning = false;
+
+      function goTo(idx) {
+        if (transitioning) return;
+        var next = ((idx % total) + total) % total;
+        if (next === current) return;
+        transitioning = true;
+
+        var prevSlide = slides[current];
+        var nextSlide = slides[next];
+
+        // Snap next slide to off-screen right without transition
+        nextSlide.style.transition = 'none';
+        nextSlide.style.transform  = 'translateX(calc(100% + 32px))';
+        nextSlide.offsetHeight; // force reflow so browser registers position
+
+        // Clear inline styles — CSS classes now take over with transition
+        nextSlide.style.transition = '';
+        nextSlide.style.transform  = '';           // CSS .svc-slide--active → translateX(0)
+        nextSlide.classList.add('svc-slide--active');
+
+        prevSlide.classList.add('svc-slide--exit'); // CSS → translateX(-100%)
+        prevSlide.classList.remove('svc-slide--active');
+
+        dots[current].classList.remove('svc-dot--active');
+        current = next;
+        dots[current].classList.add('svc-dot--active');
+
+        setTimeout(function () {
+          prevSlide.style.transition = 'none';
+          prevSlide.classList.remove('svc-slide--exit');
+          prevSlide.offsetHeight;
+          prevSlide.style.transition = '';
+          transitioning = false;
+        }, 620);
+      }
+
+      dots.forEach(function (dot, i) {
+        dot.addEventListener('click', function () {
+          clearInterval(timer);
+          goTo(i);
+          timer = setInterval(function () { goTo(current + 1); }, 3500);
+        });
+      });
+
+      timer = setInterval(function () { goTo(current + 1); }, 3500);
+    })();
+
+    // ── Pain cards spotlight hover (tracks on grid → flows between cards) ──
+    (function () {
+      var grid = document.querySelector('.pain-grid');
+      if (!grid) return;
+      grid.addEventListener('mousemove', function (e) {
+        document.querySelectorAll('.pain-card').forEach(function (card) {
+          var r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+          card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+        });
+      });
+      grid.addEventListener('mouseleave', function () {
+        document.querySelectorAll('.pain-card').forEach(function (card) {
+          card.style.setProperty('--mx', '-999px');
+          card.style.setProperty('--my', '-999px');
+        });
+      });
+    })();
+
+    // ── Hero full grid cells + proximity glow ──
+    (function () {
+      var hero      = document.querySelector('.hero');
+      var container = document.querySelector('.hero-cells');
+      if (!hero || !container) return;
+
+      var SIZE = window.innerWidth <= 700 ? 64 : 96;
+      var heroH = hero.offsetHeight;
+      var cols  = Math.ceil(window.innerWidth / SIZE) + 1;
+      var rows  = Math.ceil(heroH / SIZE) + 1;
+      var cellData = [];
+
+      container.innerHTML = '';
+
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+          var el   = document.createElement('div');
+          el.className = 'hero-cell';
+          var cx   = c * SIZE;
+          var cy   = r * SIZE;
+          el.style.left   = cx + 'px';
+          el.style.top    = cy + 'px';
+          el.style.width  = SIZE + 'px';
+          el.style.height = SIZE + 'px';
+          var d     = (2.5 + Math.random() * 3).toFixed(1);
+          var delay = (Math.random() * 4).toFixed(2);
+          var lo    = (0.04 + Math.random() * 0.08).toFixed(2);
+          var hi    = (0.1  + Math.random() * 0.15).toFixed(2);
+          el.style.setProperty('--d',     d + 's');
+          el.style.setProperty('--delay', delay + 's');
+          el.style.setProperty('--lo',    lo);
+          el.style.setProperty('--hi',    hi);
+          container.appendChild(el);
+          cellData.push({ el: el, cx: cx + SIZE / 2, cy: cy + SIZE / 2,
+                          loBase: parseFloat(lo), hiBase: parseFloat(hi) });
+        }
+      }
+
+      hero.addEventListener('mousemove', function (e) {
+        var rect = hero.getBoundingClientRect();
+        var mx = e.clientX - rect.left;
+        var my = e.clientY - rect.top;
+        cellData.forEach(function (d) {
+          var dist  = Math.sqrt(Math.pow(mx - d.cx, 2) + Math.pow(my - d.cy, 2));
+          var boost = Math.max(0, 1 - dist / 180);
+          d.el.style.setProperty('--lo', (d.loBase + boost * 0.3).toFixed(2));
+          d.el.style.setProperty('--hi', (d.hiBase + boost * 0.5).toFixed(2));
+        });
+      }, { passive: true });
+
+      hero.addEventListener('mouseleave', function () {
+        cellData.forEach(function (d) {
+          d.el.style.setProperty('--lo', d.loBase);
+          d.el.style.setProperty('--hi', d.hiBase);
+        });
+      });
+    })();
+
+  </script>
+</body>
+</html>
